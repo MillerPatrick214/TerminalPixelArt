@@ -26,11 +26,10 @@ void Board::clearBoard() {
 
 void Board::printBoard() {
     for (int i = 0; i < 20; ++i) {
-        cout << endl;
         for (int j = 0; j < 20; ++i) {
             pixelVect[i][j]->printVisualPixel();
         }
-
+        cout << endl;
     }
 }
 
@@ -48,13 +47,10 @@ void Board::moveCursor(int x, int y) {                  //returns bool indicatin
         throw Board::BoundsError();
     }
 
-    /*                                      //this needs to be put into a try catch block in the UI class. This function will throw the exception if necessary where it will be caught by that UI function
-    catch (Board::BoundsError e) {
-        cout << e.what() << endl;
-        return
-    }*/
-
     currPixel->setSelected(false);      //set old pixel to selected=false
     currPixel = pixelVect[newX][newY];  //new curPix assigned
     currPixel->setSelected(true);       //new currPix set selected which enables flash
-}   
+}
+Pixel* Board::getCurrPixel() {
+    return currPixel; 
+}

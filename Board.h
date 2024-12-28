@@ -25,6 +25,9 @@ class Board {
       void printBoard(); //calls each pixel in array to self print in the correct order;
       void moveCursor(int x, int y);
       Pixel* getPixel(int x, int y);
+      Pixel* getCurrPixel();
 };
+
+
 
 #endif

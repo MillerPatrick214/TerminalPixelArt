@@ -8,7 +8,6 @@ int main() {
 	UI test;
 
 	string str = test.inputPoll();
-
-
+	
 	return 0;
 }
