@@ -1,28 +1,13 @@
-#include "Pixel.h"
+Ôªø#include "Pixel.h"
 #include <iostream>
 
 using namespace std;
 
-#define RESET "\033[0m"
-#define BLINK "\033[5m"
-#define WHITE "\033[0;37m"
-#define RED "\033[31m"
-#define YELLOW "\033[33m"
-#define BLUE "\033[34m"
-#define BLACK "\033[0;30m"    // Black
-#define GREEN "\033[0;32m"    // Green
-#define CYAN "\033[0;36m"     // Cyan
-#define MAGENTA "\033[0;35m"  // Magenta
-#define GREY "\033[0;90m"     // Grey (Bright Black)
-#define ORANGE "\033[38;5;214m" 
-
 Pixel::Pixel(int x, int y) {
-    on = false;
     selected = false; 
     color = WHITE;
     position = {x, y};
-    visualPixel = "€€";
- 
+    visualPixel = "√õ√õ";
 }
 
 void Pixel::setColor(string color) {
@@ -34,7 +19,13 @@ string Pixel::getColor() {
 }
 
 void Pixel::printVisualPixel() {
-    cout << ((selected) ? BLINK : RESET) << color << visualPixel;
+    if (getSelected()) {
+        cout << BLINK << color << char(176) << char(176) << RESET;
+    }
+    else {
+        cout << RESET << getColor() << visualPixel;
+    }
+
 
 }
 void Pixel::setPosition(pair<int,int> position) {

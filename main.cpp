@@ -1,5 +1,6 @@
 #include "UI.h"
 #include <windows.h>
+#include <conio.h>
 
 int main() {
 	SetConsoleCP(437);
@@ -7,7 +8,10 @@ int main() {
 
 	UI test;
 
-	string str = test.inputPoll();
+	test.beginProgram();
+
+
+
 	
 	return 0;
 }

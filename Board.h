@@ -9,8 +9,8 @@ using namespace std;
  
 class Board {
   private:
-      int boardSize = 20;
-      array<array<Pixel*, 20>, 20>  pixelVect;
+      int boardSize;
+      vector<vector<Pixel*>>  pixelVect;
       Pixel* currPixel;
   
   public:

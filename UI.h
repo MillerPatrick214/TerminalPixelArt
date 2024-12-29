@@ -23,7 +23,7 @@ public:
             return "Error: Input not recognized";
         }
     };
-   void printScreen(string currBottom);
+   void printScreen();
    void beginProgram();        //Starts program loop
    string inputPoll();       //now that we can compile & use on windows, we can do actual input polling.
    void processInput(string inputEvent, bool& quitting);        //will need something passed to it, likely a string w/ map;

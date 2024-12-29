@@ -3,8 +3,6 @@
 #include <string>
 #include <iostream>
 
-
-/*
 #define RESET "\033[0m"
 #define BLINK "\033[5m"
 #define WHITE "\033[0;37m"
@@ -15,8 +13,9 @@
 #define GREEN "\033[0;32m"    // Green
 #define CYAN "\033[0;36m"     // Cyan
 #define MAGENTA "\033[0;35m"  // Magenta
-#define GREY "\033[0;90m"     // Grey (Bright Black)
-*/
+#define GREY "\033[0;90m"     //
+#define ORANGE "\033[38;5;214m" 
+
 using namespace std;
 
 class DesignStructs 
@@ -28,12 +27,14 @@ class DesignStructs
 
         vector<string> text =
         {
-        "  _____ _          _  _____            "
-        " |  __ (_)        | |/ ____|           ",
-        " | |__) |__  _____| | |  __  ___ _ __  ",
-        " |  ___/ \ \/ / _ \ | | |_ |/ _ \ '_ \ ",
-        " | |   | |>  <  __/ | |__| |  __/ | | |",
-        " |_|   |_/_/\_\___|_|\_____|\___|_| |_|"
+         
+        YELLOW R"(  _____ _          _  _____            )",
+        ORANGE R"( |  __ (_)        | |/ ____|           )",
+        CYAN R"( | |__) |__  _____| | |  __  ___ _ __  )",
+        BLUE R"( |  ___/ \ \/ / _ \ | | |_ |/ _ \ '_ \ )",
+        GREEN R"( | |   | |>  <  __/ | |__| |  __/ | | |)",
+        RED R"( |_|   |_/_/\_\___|_|\_____|\___|_| |_|)",RESET,
+        MAGENTA R"(By Patrick Miller)",RESET
         };
 
         void print() {
@@ -43,18 +44,20 @@ class DesignStructs
         }
     };
 
-    struct ColorSelect 
+    struct Default
     {
         vector<string> text = 
-        {
+        {   "Use arrow keys to navigate array of pixels",
+            "Press 'Esc' to quit at any time.",
+            ""
             "Please Select from the following colors: ",
-            "-----------------------------------------",
-            "1. Red     7. White",
-            "2. Orange      8.Black",
+            "------------------------------------------",
+            "1. Red         7. White",
+            "2. Orange      8. Black",
             "3. Yellow      9. Cyan ",
-            "4. Green       0. Return to pixel selection",
-            "5. Blue"
-            "6. Magenta"
+            "4. Green       0. Grey ",
+            "5. Blue",
+            "6. Magenta             "
         };
         void print() {
             for (string line : text) {
@@ -63,26 +66,29 @@ class DesignStructs
         }
     };
 
-    struct Default 
+
+    struct Quit
     {
-        vector<string> text = 
-        { 
-            "Select Pixel"
-            "------------------------------------------"
-            "Use arrow keys to navigate array of pixels",
-            "Hit 'Enter' to select pixel and choose color"
-        };
+        vector<string> text =
+        {
+        "Would you like to quit?",
+        "------------------------------------------",
+        "'Y' to quit",
+        "'N' to continue"
 
-        void print() {
+        };
+            void print() {
             for (string line : text) {
                 cout << line << endl;
             }
         }
+
+
     };
 
+    Quit QuitStruct;
     Header HeaderStruct;
     Default DefaultStruct;
-    ColorSelect Colorstruct;
 };
 
 

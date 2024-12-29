@@ -16,12 +16,13 @@ using namespace std;
 #define COLORSCREEN "colorscreen"
 #define DEFAULT "default"
 #define QUIT "quit"
+#define CONTINUE "continue"
 
-map <string, pair<int, int>> dirMap { //for taking return string from input poll and then changing selected piece on board
-	{ UP, {0,1} },
-	{ RIGHT, {1,0} },
-	{ DOWN, {0,-1} },
-	{ LEFT, {-1, 0}}
+map<string, pair<int, int>> dirMap {
+	{ UP, {-1, 0} },    // Moving up decreases row (Y-axis) I always get this shit fucked up god dammit
+	{ RIGHT, {0, 1} },  // Moving right increases column (X-axis)
+	{ DOWN, {1, 0} },   // Moving down increases row (Y-axis)
+	{ LEFT, {0, -1} }   // Moving left decreases column (X-axis)
 };
 
 map <int, string> inputArrowMap = {		//key scancode maps to direction of arrow key
@@ -31,18 +32,30 @@ map <int, string> inputArrowMap = {		//key scancode maps to direction of arrow k
 	{75, LEFT}
 };
 
+map <int, string> colorMap = {
+	{0, RED},
+	{1, ORANGE},
+	{2, YELLOW },
+	{3, GREEN},
+	{4, BLUE},
+	{5, MAGENTA},
+	{6, WHITE},
+	{7, BLACK},
+	{8, CYAN},
+	{9, GREY}
+};
+
 
 string UI::inputPoll() {			//stops program and waits for input currently. Most likely this will be intended behavior.
 	int key = _getch();
 
-	if (key != 224 && key != 27 && key != 13) {				//Right now if key doesn't equal arrow key just return the key.
-		throw UI::InputError();
-	}
 	if (key == 27) {
 		return ESCAPE;
 	}
-	if (key == 13) {
-		return ENTER;
+
+	if (key >= 48 && key <= 57) {
+		int value = key - 49;
+		return to_string(value);
 	}
 
 	int scanCode = _getch();
@@ -51,8 +64,11 @@ string UI::inputPoll() {			//stops program and waits for input currently. Most l
 		for (map<int, string>::iterator it = inputArrowMap.begin(); it != inputArrowMap.end(); ++it) {
 			if (it->first == scanCode)	//224
 				return it->second;
+		
 		}
-		cout << "Error: Recognized key as 224 -- Did not recognize a scan code belonging to an UP/DOWN/L/R Arrow Key press" << endl;
+	}
+	else {
+		throw UI::InputError();
 	}
 }
 
@@ -60,20 +76,23 @@ void UI::beginProgram()
 {
 	bool quitting = false;
 	string input;
+	int anyKey; 
 
 	while (!quitting) 
 	{ 
-		system("cls");		//should clear screen if my memory is right
-		pixelBoard.printBoard();
+		system("cls");
+
+		printScreen();
 
 		try 
 		{
-			string input = inputPoll();
+			input = inputPoll();
 		}
+
 		catch (UI::InputError e) 
 		{
 			cout << e.what() << endl << "Press any key to continue..." << endl;;
-			_getch();
+			anyKey = _getch();
 			continue;
 		}
 
@@ -85,7 +104,7 @@ void UI::beginProgram()
 		catch (Board::BoundsError e) 
 		{
 			cout << e.what() << endl << "Press any key to continue..." << endl;
-			_getch();
+			anyKey = _getch();
 			continue;
 		}
 	}
@@ -95,11 +114,8 @@ void UI::processInput(string inputEvent, bool& quitting)
 {
 
 	if (inputEvent == ESCAPE) {
-		printScreen(QUIT);
-	}
-
-	if (inputEvent == ENTER) {
-		printScreen(COLORSCREEN);
+		quit();
+		return;
 	}
 
 	if (inputEvent == UP || inputEvent == DOWN || inputEvent == LEFT || inputEvent == RIGHT) {
@@ -107,37 +123,68 @@ void UI::processInput(string inputEvent, bool& quitting)
 			if (inputEvent == it->first) {
 				pair<int, int> dir = it->second;
 					pixelBoard.moveCursor(dir.first, dir.second);
+					return;
 	
 			}
 		}
 	}
+
+	else if (isdigit(inputEvent[0])) {
+		int keyVal = stoi(inputEvent);
+		
+		auto it = colorMap.find(keyVal);
+		if (it != colorMap.end()) {
+			pixelBoard.getCurrPixel()->setColor(it->second);
+		}
+		else {
+			cout << "Error: color code nto found";
+		}
+	}
 }
 
-void UI::printScreen(string currBottom) {
-	system("cls");
-	TextStructs.Header(); 
+void UI::printScreen() {
+
+	//system("cls");
+
+	TextStructs.HeaderStruct.print();
 
 	cout << endl;
+
 	pixelBoard.printBoard();
+
 	cout << endl;
 
-	if (currBottom == DEFAULT) {
-		
-	}
-
-	else if (currBottom == COLORSCREEN) {
-		
-	}
-
-	else if (currBottom == QUIT) {
-		
-	}
-
+	TextStructs.DefaultStruct.print();
 
 }
 
 bool UI::quit() {
-	//cout would you like to quit yn
+	system("cls");
+	TextStructs.QuitStruct.print();
+	
+	bool inputValid = false;
+	while(!inputValid) {
+		string input;
 
+		try {
+			input = inputPoll();
+		}
+		
+		catch (UI::InputError e) {
+			cout << e.what() << endl;
+			continue;
+		}
+
+		if (input == CONTINUE) {
+			return false;
+		}
+		else if (input == QUIT) {
+			return true;
+		}
+
+		inputValid = true;
+
+	}
+	return false;
 }
 
